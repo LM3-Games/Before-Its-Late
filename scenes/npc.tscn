@@ -1,0 +1,183 @@
+[gd_scene load_steps=14 format=3 uid="uid://bjq67k4j7s8ji"]
+
+[ext_resource type="Script" uid="uid://dv3bmfv1j8j7m" path="res://scripts/npc.gd" id="1_nh2m4"]
+[ext_resource type="Texture2D" uid="uid://dumsjgvaarqvb" path="res://assets/art/characters/womanGreen_stand.png" id="3_4wlns"]
+[ext_resource type="Material" uid="uid://cnmxao10pbk1l" path="res://shaders/outline.tres" id="3_7n8xq"]
+[ext_resource type="Texture2D" uid="uid://mn1hu3fp7exy" path="res://assets/art/cash.png" id="3_rv78h"]
+[ext_resource type="Shader" uid="uid://b6nadjh5xlltp" path="res://shaders/outline.gdshader" id="4_4wlns"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tl2vt"]
+shader = ExtResource("4_4wlns")
+shader_parameter/show_outline = true
+shader_parameter/allow_out_of_bounds = true
+shader_parameter/outline_thickness = 3.0
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7n8xq"]
+radius = 5.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nh2m4"]
+
+[sub_resource type="Gradient" id="Gradient_nh2m4"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_abqhh"]
+gradient = SubResource("Gradient_nh2m4")
+
+[sub_resource type="Animation" id="Animation_4wlns"]
+resource_name = "cash_popup"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CashAmountText:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CashAmountText:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0.1, 0.1), Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CashAmountText:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(-2, -1), Vector2(-24, -30), Vector2(-24, -60)]
+}
+
+[sub_resource type="Animation" id="Animation_tl2vt"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CashAmountText:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CashAmountText:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.1, 0.1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CashAmountText:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-2, -1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tl2vt"]
+_data = {
+&"RESET": SubResource("Animation_tl2vt"),
+&"cash_popup": SubResource("Animation_4wlns")
+}
+
+[node name="NPC" type="CharacterBody2D"]
+z_index = 1
+y_sort_enabled = true
+collision_layer = 8
+collision_mask = 3
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_nh2m4")
+speed = 20.0
+
+[node name="Anchor" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite2D" parent="Anchor"]
+material = ExtResource("3_7n8xq")
+scale = Vector2(0.23, 0.23)
+texture = ExtResource("3_4wlns")
+region_rect = Rect2(386, 44, 32, 43)
+
+[node name="Cash" type="Sprite2D" parent="."]
+z_index = 4
+material = SubResource("ShaderMaterial_tl2vt")
+position = Vector2(0, -17)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("3_rv78h")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_7n8xq")
+
+[node name="StealArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StealArea"]
+shape = SubResource("CircleShape2D_nh2m4")
+
+[node name="LootProgress" type="TextureProgressBar" parent="."]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = -8.0
+fill_mode = 6
+nine_patch_stretch = true
+texture_progress = SubResource("GradientTexture1D_abqhh")
+
+[node name="CashAmountText" type="Label" parent="."]
+modulate = Color(1, 1, 1, 0)
+offset_left = -2.0
+offset_top = -1.0
+offset_right = 44.0
+offset_bottom = 19.0
+scale = Vector2(0.1, 0.1)
+text = "+ $100"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NavigationAgent" type="NavigationAgent2D" parent="."]
+path_postprocessing = 1
+avoidance_enabled = true
+radius = 6.0
+avoidance_layers = 2
+avoidance_mask = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_tl2vt")
+}
+
+[connection signal="body_entered" from="StealArea" to="." method="_on_steal_area_body_entered"]
+[connection signal="body_exited" from="StealArea" to="." method="_on_steal_area_body_exited"]
+[connection signal="navigation_finished" from="NavigationAgent" to="." method="_on_navigation_finished"]
+[connection signal="velocity_computed" from="NavigationAgent" to="." method="_on_velocity_computed"]

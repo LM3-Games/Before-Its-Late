@@ -1,0 +1,127 @@
+[gd_scene load_steps=5 format=3 uid="uid://blclpok5ff1ed"]
+
+[ext_resource type="Script" uid="uid://6n08klesp1fk" path="res://template/menus/audio/audio.gd" id="1_xrhjq"]
+[ext_resource type="StyleBox" uid="uid://vhcj77i77ef8" path="res://template/resources/black_white_panel.tres" id="2_lt85c"]
+[ext_resource type="PackedScene" uid="uid://v2utitgdq37h" path="res://template/action_button/action_button.tscn" id="2_xrhjq"]
+[ext_resource type="Script" uid="uid://bxb2pq07dpsc0" path="res://scripts/popup_animation.gd" id="3_lt85c"]
+
+[node name="Audio" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xrhjq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -62.0
+offset_right = 160.0
+offset_bottom = 62.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "AUDIO"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = ExtResource("2_lt85c")
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "MASTER"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="VBoxContainer/PanelContainer/GridContainer"]
+layout_mode = 2
+text = ":"
+
+[node name="Master" type="HSlider" parent="VBoxContainer/PanelContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 16)
+layout_mode = 2
+size_flags_vertical = 1
+focus_neighbor_top = NodePath("../../../BackToOptions")
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="PopupAnimation" type="Node" parent="VBoxContainer/PanelContainer/GridContainer/Master"]
+script = ExtResource("3_lt85c")
+hover_scale = Vector2(1.05, 1.05)
+
+[node name="Label3" type="Label" parent="VBoxContainer/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "MUSIC"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label4" type="Label" parent="VBoxContainer/PanelContainer/GridContainer"]
+layout_mode = 2
+text = ":"
+
+[node name="Music" type="HSlider" parent="VBoxContainer/PanelContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 16)
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="PopupAnimation" type="Node" parent="VBoxContainer/PanelContainer/GridContainer/Music"]
+script = ExtResource("3_lt85c")
+hover_scale = Vector2(1.05, 1.05)
+
+[node name="Label5" type="Label" parent="VBoxContainer/PanelContainer/GridContainer"]
+layout_mode = 2
+text = "SFX"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Label6" type="Label" parent="VBoxContainer/PanelContainer/GridContainer"]
+layout_mode = 2
+text = ":"
+
+[node name="SFX" type="HSlider" parent="VBoxContainer/PanelContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 16)
+layout_mode = 2
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="PopupAnimation" type="Node" parent="VBoxContainer/PanelContainer/GridContainer/SFX"]
+script = ExtResource("3_lt85c")
+hover_scale = Vector2(1.05, 1.05)
+
+[node name="BackToOptions" parent="VBoxContainer" instance=ExtResource("2_xrhjq")]
+layout_mode = 2
+size_flags_vertical = 6
+focus_neighbor_bottom = NodePath("../PanelContainer/GridContainer/Master")
+text = "BACK"

@@ -1,0 +1,271 @@
+[gd_scene load_steps=23 format=3 uid="uid://c24pl7g8m1cvf"]
+
+[ext_resource type="Script" uid="uid://sgg0mkm41m3o" path="res://scripts/guard.gd" id="1_m4fl1"]
+[ext_resource type="Texture2D" uid="uid://ccnx7voq30lhd" path="res://assets/art/characters/manBlue_stand.png" id="2_lpkwa"]
+[ext_resource type="Texture2D" uid="uid://movnsvogso0j" path="res://assets/art/alert/WarningSign01.png" id="3_k0dx2"]
+[ext_resource type="Texture2D" uid="uid://d3fayjjkg581t" path="res://assets/art/alert/WarningSign02.png" id="4_lpkwa"]
+[ext_resource type="Texture2D" uid="uid://d04coho51md5f" path="res://assets/art/alert/WarningSign03.png" id="5_17ufb"]
+[ext_resource type="Texture2D" uid="uid://7ejxguufjfk1" path="res://assets/art/alert/WarningSign04.png" id="6_nflhy"]
+[ext_resource type="Texture2D" uid="uid://fht8ld24q7g" path="res://assets/art/alert/WarningSign05.png" id="7_ybvlj"]
+[ext_resource type="Texture2D" uid="uid://ckftcj3urvaox" path="res://assets/art/alert/WarningSign06.png" id="8_vuaq3"]
+[ext_resource type="Texture2D" uid="uid://b6y5o7b0dyhqk" path="res://assets/art/alert/WarningSign07.png" id="9_00o3k"]
+[ext_resource type="Texture2D" uid="uid://b41ql7t8dg0ju" path="res://assets/art/alert/WarningSign08.png" id="10_su24k"]
+[ext_resource type="Texture2D" uid="uid://cgu7sioyetpvi" path="res://assets/art/alert/WarningSign09.png" id="11_1axas"]
+[ext_resource type="Texture2D" uid="uid://de7aq8jukgdyu" path="res://assets/art/characters/manBlue_hold.png" id="12_17ufb"]
+
+[sub_resource type="Shader" id="Shader_06jv5"]
+code = "shader_type canvas_item;
+
+uniform bool allow_out_of_bounds = true;
+uniform float outline_thickness: hint_range(0.0, 16.0, 1.0) = 1.0;
+uniform vec4 outline_color: source_color = vec4(1.0);
+
+bool is_inside_usquare(vec2 x) {
+	return x == clamp(x, vec2(0.0), vec2(1.0));
+}
+
+vec4 blend(vec4 bottom, vec4 top) {
+    float alpha = top.a + bottom.a * (1.0 - top.a);
+    if (alpha < 0.0001) return vec4(0.0);
+
+    vec3 color = mix(bottom.rgb * bottom.a, top.rgb, top.a) / alpha;
+    return vec4(color, alpha);
+}
+
+void vertex() {
+	if (allow_out_of_bounds) VERTEX += (UV * 2.0 - 1.0) * outline_thickness;
+}
+
+void fragment() {
+	if (outline_thickness > 0.0 && outline_color.a > 0.0) {
+		vec2 uv = UV;
+		vec4 texture_color = texture(TEXTURE, UV);
+
+		if (allow_out_of_bounds) {
+			vec2 texture_pixel_size = vec2(1.0) / (vec2(1.0) / TEXTURE_PIXEL_SIZE + vec2(outline_thickness * 2.0));
+			uv = (uv - texture_pixel_size * outline_thickness) * TEXTURE_PIXEL_SIZE / texture_pixel_size;
+
+			if (is_inside_usquare(uv)) {
+				texture_color = texture(TEXTURE, uv);
+			} else {
+				texture_color = vec4(0.0);
+			}
+		}
+
+		float alpha = 0.0;
+		
+		for (float y = 1.0; y <= outline_thickness; y++) {
+			for (float x = 0.0; x <= y; x++) {
+				if (length(vec2(x, y - 0.5)) > outline_thickness) break;
+
+				float look_at_alpha;
+				vec2 look_at_uv[8] = {
+					uv + vec2(x, y) * TEXTURE_PIXEL_SIZE,
+					uv + vec2(-x, y) * TEXTURE_PIXEL_SIZE,
+					uv + vec2(x, -y) * TEXTURE_PIXEL_SIZE,
+					uv + vec2(-x, -y) * TEXTURE_PIXEL_SIZE,
+					uv + vec2(y, x) * TEXTURE_PIXEL_SIZE,
+					uv + vec2(-y, x) * TEXTURE_PIXEL_SIZE,
+					uv + vec2(y, -x) * TEXTURE_PIXEL_SIZE,
+					uv + vec2(-y, -x) * TEXTURE_PIXEL_SIZE
+				};
+
+				for (int i = 0; i < 8; i++) {
+					if (is_inside_usquare(look_at_uv[i])) {
+						look_at_alpha = texture(TEXTURE, look_at_uv[i]).a;
+						if (look_at_alpha > alpha) alpha = look_at_alpha;
+						if (1.0 - alpha < 0.0001) break;
+					}
+				}
+				
+				if (1.0 - alpha < 0.0001) break;
+			}
+				
+			if (1.0 - alpha < 0.0001) break;
+		}
+
+		COLOR = blend(vec4(outline_color.rgb, alpha * outline_color.a), texture_color);
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_17ufb"]
+shader = SubResource("Shader_06jv5")
+shader_parameter/allow_out_of_bounds = true
+shader_parameter/outline_thickness = 2.0
+shader_parameter/outline_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lpkwa"]
+radius = 5.0
+
+[sub_resource type="Animation" id="Animation_snqa8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_k0dx2")]
+}
+
+[sub_resource type="Animation" id="Animation_gn8tx"]
+resource_name = "alert"
+length = 0.8
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("3_k0dx2"), ExtResource("4_lpkwa"), ExtResource("5_17ufb"), ExtResource("6_nflhy"), ExtResource("7_ybvlj"), ExtResource("8_vuaq3"), ExtResource("9_00o3k"), ExtResource("10_su24k"), ExtResource("11_1axas")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5dfqo"]
+_data = {
+&"RESET": SubResource("Animation_snqa8"),
+&"alert": SubResource("Animation_gn8tx")
+}
+
+[sub_resource type="Animation" id="Animation_k0dx2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Anchor/Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_lpkwa")]
+}
+
+[sub_resource type="Animation" id="Animation_ygo2t"]
+resource_name = "chase"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Anchor/Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("12_17ufb")]
+}
+
+[sub_resource type="Animation" id="Animation_ci2qi"]
+resource_name = "patrol"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Anchor/Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_lpkwa")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gn8tx"]
+_data = {
+&"RESET": SubResource("Animation_k0dx2"),
+&"chase": SubResource("Animation_ygo2t"),
+&"patrol": SubResource("Animation_ci2qi")
+}
+
+[node name="Guard" type="CharacterBody2D"]
+z_index = 1
+y_sort_enabled = true
+collision_layer = 4
+collision_mask = 3
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_m4fl1")
+
+[node name="Anchor" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite2D" parent="Anchor"]
+material = SubResource("ShaderMaterial_17ufb")
+scale = Vector2(0.23, 0.23)
+texture = ExtResource("2_lpkwa")
+region_rect = Rect2(394, 132, 31, 43)
+
+[node name="DetectionCone" type="Area2D" parent="Anchor"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="ConeCollision" type="CollisionPolygon2D" parent="Anchor/DetectionCone"]
+position = Vector2(-12, 0)
+polygon = PackedVector2Array(17, -1, 60, -16, 60, 16, 17, 1)
+
+[node name="Cone" type="Polygon2D" parent="Anchor/DetectionCone"]
+z_index = 4
+position = Vector2(-12, 0)
+color = Color(1, 0, 0, 0.392157)
+polygon = PackedVector2Array(17, -1, 60, -16, 60, 16, 17, 1)
+
+[node name="BoxCollision" type="CollisionPolygon2D" parent="Anchor/DetectionCone"]
+position = Vector2(-12, 0)
+polygon = PackedVector2Array(17, -5, 28, -8, 28, 8, 17, 5)
+disabled = true
+
+[node name="Box" type="Polygon2D" parent="Anchor/DetectionCone"]
+visible = false
+z_index = 4
+position = Vector2(-12, 0)
+color = Color(1, 0, 0, 0.392157)
+polygon = PackedVector2Array(17, -5, 28, -8, 28, 8, 17, 5)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_lpkwa")
+
+[node name="Alert" type="Sprite2D" parent="."]
+visible = false
+z_index = 4
+position = Vector2(0, -16)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_k0dx2")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Alert"]
+libraries = {
+&"": SubResource("AnimationLibrary_5dfqo")
+}
+autoplay = "alert"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_gn8tx")
+}
+autoplay = "patrol"
+
+[node name="NavigationAgent" type="NavigationAgent2D" parent="."]
+path_postprocessing = 1
+avoidance_enabled = true
+radius = 6.0
+avoidance_mask = 3
+
+[node name="NavigationTimer" type="Timer" parent="."]
+wait_time = 0.1
+
+[connection signal="body_entered" from="Anchor/DetectionCone" to="." method="_on_detection_cone_body_entered"]
+[connection signal="body_exited" from="Anchor/DetectionCone" to="." method="_on_detection_cone_body_exited"]
+[connection signal="navigation_finished" from="NavigationAgent" to="." method="_on_navigation_finished"]
+[connection signal="velocity_computed" from="NavigationAgent" to="." method="_on_velocity_computed"]
+[connection signal="timeout" from="NavigationTimer" to="." method="_on_navigation_timer_timeout"]

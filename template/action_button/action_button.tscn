@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://v2utitgdq37h"]
+
+[ext_resource type="Script" uid="uid://dy2n81n2p3atf" path="res://template/action_button/action_button.gd" id="1_nf15b"]
+[ext_resource type="Script" uid="uid://bxb2pq07dpsc0" path="res://scripts/popup_animation.gd" id="1_obaki"]
+
+[node name="ActionButton" type="Button"]
+custom_minimum_size = Vector2(96, 32)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 16
+text = "ACTION"
+script = ExtResource("1_nf15b")
+
+[node name="PopupAnimation" type="Node" parent="."]
+script = ExtResource("1_obaki")

@@ -1,0 +1,141 @@
+[gd_scene load_steps=19 format=3 uid="uid://c00ocpx6ldax2"]
+
+[ext_resource type="Script" uid="uid://bx8oc4bjrrm3l" path="res://scripts/cctv.gd" id="1_cvpoc"]
+[ext_resource type="Texture2D" uid="uid://c60jh8rlijsqe" path="res://assets/art/camera.png" id="2_kod1s"]
+[ext_resource type="Texture2D" uid="uid://movnsvogso0j" path="res://assets/art/alert/WarningSign01.png" id="3_gg62t"]
+[ext_resource type="Texture2D" uid="uid://d3fayjjkg581t" path="res://assets/art/alert/WarningSign02.png" id="4_d8io0"]
+[ext_resource type="Texture2D" uid="uid://d04coho51md5f" path="res://assets/art/alert/WarningSign03.png" id="5_v3c5o"]
+[ext_resource type="Texture2D" uid="uid://7ejxguufjfk1" path="res://assets/art/alert/WarningSign04.png" id="6_qrs21"]
+[ext_resource type="Texture2D" uid="uid://fht8ld24q7g" path="res://assets/art/alert/WarningSign05.png" id="7_ty1so"]
+[ext_resource type="Texture2D" uid="uid://ckftcj3urvaox" path="res://assets/art/alert/WarningSign06.png" id="8_goe4s"]
+[ext_resource type="Texture2D" uid="uid://b6y5o7b0dyhqk" path="res://assets/art/alert/WarningSign07.png" id="9_6v23c"]
+[ext_resource type="Texture2D" uid="uid://b41ql7t8dg0ju" path="res://assets/art/alert/WarningSign08.png" id="10_6dpim"]
+[ext_resource type="Texture2D" uid="uid://cgu7sioyetpvi" path="res://assets/art/alert/WarningSign09.png" id="11_u3nwo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qawlr"]
+size = Vector2(8, 4)
+
+[sub_resource type="Animation" id="Animation_snqa8"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_gg62t")]
+}
+
+[sub_resource type="Animation" id="Animation_gn8tx"]
+resource_name = "alert"
+length = 0.8
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [ExtResource("3_gg62t"), ExtResource("4_d8io0"), ExtResource("5_v3c5o"), ExtResource("6_qrs21"), ExtResource("7_ty1so"), ExtResource("8_goe4s"), ExtResource("9_6v23c"), ExtResource("10_6dpim"), ExtResource("11_u3nwo")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5dfqo"]
+_data = {
+&"RESET": SubResource("Animation_snqa8"),
+&"alert": SubResource("Animation_gn8tx")
+}
+
+[sub_resource type="Animation" id="Animation_kod1s"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DetectionArea:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_cvpoc"]
+resource_name = "rotate"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("DetectionArea:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 1.22173, 0.0, -1.22173, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kod1s"]
+_data = {
+&"RESET": SubResource("Animation_kod1s"),
+&"rotate": SubResource("Animation_cvpoc")
+}
+
+[node name="CCTV" type="StaticBody2D"]
+z_index = 3
+script = ExtResource("1_cvpoc")
+
+[node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="DetectionArea"]
+polygon = PackedVector2Array(0, 0, 60, -20, 60, 20)
+
+[node name="Polygon2D" type="Polygon2D" parent="DetectionArea"]
+color = Color(1, 0, 0, 0.392157)
+polygon = PackedVector2Array(0, 0, 60, -20, 60, 20)
+
+[node name="Sprite2D" type="Sprite2D" parent="DetectionArea"]
+rotation = 1.0472
+scale = Vector2(0.07, 0.07)
+texture = ExtResource("2_kod1s")
+offset = Vector2(0, 4)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_qawlr")
+disabled = true
+
+[node name="Alert" type="Sprite2D" parent="."]
+visible = false
+z_index = 4
+position = Vector2(0, -16)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_gg62t")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Alert"]
+libraries = {
+&"": SubResource("AnimationLibrary_5dfqo")
+}
+autoplay = "alert"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_kod1s")
+}
+speed_scale = 0.3
+
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]

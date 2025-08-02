@@ -1,0 +1,254 @@
+[gd_scene load_steps=8 format=3 uid="uid://rf31xctvl1c3"]
+
+[ext_resource type="Script" uid="uid://bkfkqmlihu6ji" path="res://template/menus/title_screen/title_screen.gd" id="1_5df70"]
+[ext_resource type="PackedScene" uid="uid://v2utitgdq37h" path="res://template/action_button/action_button.tscn" id="2_vuv2h"]
+[ext_resource type="StyleBox" uid="uid://vhcj77i77ef8" path="res://template/resources/black_white_panel.tres" id="3_72buf"]
+[ext_resource type="Texture2D" uid="uid://uv10xidrv8kn" path="res://assets/logo.svg" id="3_yh52c"]
+[ext_resource type="PackedScene" uid="uid://blclpok5ff1ed" path="res://template/menus/audio/audio.tscn" id="4_rhiq2"]
+[ext_resource type="PackedScene" uid="uid://q1e3cdfeuchs" path="res://template/menus/visual/visual.tscn" id="5_kp51c"]
+[ext_resource type="PackedScene" uid="uid://b2vcjkqu5vcjg" path="res://template/menus/credits/credits.tscn" id="7_ca08b"]
+
+[node name="TitleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5df70")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Main" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Main"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -66.0
+offset_top = -67.0
+offset_right = 66.0
+offset_bottom = 67.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Main/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Logo" type="Sprite2D" parent="Main/VBoxContainer/HBoxContainer/Control"]
+texture_filter = 2
+position = Vector2(0, 8)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_yh52c")
+offset = Vector2(128, 128)
+
+[node name="Title" type="Label" parent="Main/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 48
+text = "BEFORE IT'S LATE"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Spacer" type="Control" parent="Main/VBoxContainer"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+
+[node name="ButtonMenu" type="VBoxContainer" parent="Main/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 16
+
+[node name="Play" parent="Main/VBoxContainer/ButtonMenu" instance=ExtResource("2_vuv2h")]
+layout_mode = 2
+text = "PLAY"
+
+[node name="Options" parent="Main/VBoxContainer/ButtonMenu" instance=ExtResource("2_vuv2h")]
+layout_mode = 2
+text = "OPTIONS"
+
+[node name="Credits" parent="Main/VBoxContainer/ButtonMenu" instance=ExtResource("2_vuv2h")]
+layout_mode = 2
+text = "CREDITS"
+
+[node name="QuitButton" parent="Main/VBoxContainer/ButtonMenu" instance=ExtResource("2_vuv2h")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "QUIT"
+
+[node name="Options" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -82.0
+offset_right = 160.0
+offset_bottom = 82.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="Options/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "OPTIONS"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Options/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Audio" parent="Options/VBoxContainer/VBoxContainer" instance=ExtResource("2_vuv2h")]
+layout_mode = 2
+text = "AUDIO"
+
+[node name="Visual" parent="Options/VBoxContainer/VBoxContainer" instance=ExtResource("2_vuv2h")]
+layout_mode = 2
+text = "VISUAL"
+
+[node name="BackToMain" parent="Options/VBoxContainer" instance=ExtResource("2_vuv2h")]
+layout_mode = 2
+text = "BACK"
+
+[node name="Audio" parent="." instance=ExtResource("4_rhiq2")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="BackToOptions" parent="Audio/VBoxContainer" index="2"]
+physics_interpolation_mode = 0
+script = null
+
+[node name="Visual" parent="." instance=ExtResource("5_kp51c")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="BackToOptions" parent="Visual/VBoxContainer" index="2"]
+physics_interpolation_mode = 0
+script = null
+
+[node name="Credits" parent="." instance=ExtResource("7_ca08b")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="BackToMain" parent="Credits/VBoxContainer" index="3"]
+physics_interpolation_mode = 0
+script = null
+
+[node name="Quit" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -82.0
+offset_right = 160.0
+offset_bottom = 82.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Quit"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("3_72buf")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Quit/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Label" type="Label" parent="Quit/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "ARE YOU SURE ?"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Quit/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="No" parent="Quit/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_vuv2h")]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "NO"
+
+[node name="Yes" parent="Quit/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_vuv2h")]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "YES"
+
+[connection signal="pressed" from="Main/VBoxContainer/ButtonMenu/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Main/VBoxContainer/ButtonMenu/Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="Main/VBoxContainer/ButtonMenu/Credits" to="." method="_on_credits_pressed"]
+[connection signal="pressed" from="Main/VBoxContainer/ButtonMenu/QuitButton" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="Options/VBoxContainer/VBoxContainer/Audio" to="." method="_on_audio_pressed"]
+[connection signal="pressed" from="Options/VBoxContainer/VBoxContainer/Visual" to="." method="_on_visual_pressed"]
+[connection signal="pressed" from="Options/VBoxContainer/BackToMain" to="." method="_on_back_to_main_pressed"]
+[connection signal="pressed" from="Audio/VBoxContainer/BackToOptions" to="." method="_on_back_to_options_pressed"]
+[connection signal="pressed" from="Visual/VBoxContainer/BackToOptions" to="." method="_on_back_to_options_pressed"]
+[connection signal="pressed" from="Credits/VBoxContainer/BackToMain" to="." method="_on_back_to_main_pressed"]
+[connection signal="pressed" from="Quit/PanelContainer/VBoxContainer/HBoxContainer/No" to="." method="_on_no_pressed"]
+[connection signal="pressed" from="Quit/PanelContainer/VBoxContainer/HBoxContainer/Yes" to="." method="_on_yes_pressed"]
+
+[editable path="Audio"]
+[editable path="Visual"]
+[editable path="Credits"]
